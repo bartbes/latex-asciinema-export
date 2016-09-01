@@ -135,6 +135,8 @@ class DisplayBuffer:
         elif function == "H" or function == "f":
             parts = re.findall(r'(\d*);?', sequence)
             parts = [1 if part == "" else int(part) for part in parts]
+            while len(parts) < 2:
+                parts.append(1)
             self.moveCursor(parts[0]-1, parts[1]-1)
         else:
             verbose("Unknown CSI sequence: {}".format(function))
