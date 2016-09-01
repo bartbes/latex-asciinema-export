@@ -118,6 +118,24 @@ class DisplayBuffer:
             return self.writeSgr(sequence)
         elif function == "J" or function == "K":
             self.erase(function, sequence)
+        elif function == "A":
+            self.moveCursor(0, -(1 if sequence == "" else int(sequence)))
+        elif function == "B":
+            self.moveCursor(0, +(1 if sequence == "" else int(sequence)))
+        elif function == "C":
+            self.moveCursor(+(1 if sequence == "" else int(sequence)), 0)
+        elif function == "D":
+            self.moveCursor(-(1 if sequence == "" else int(sequence)), 0)
+        elif function == "E":
+            self.moveCursor(-self.cursor_x, +(1 if sequence == "" else int(sequence)))
+        elif function == "F":
+            self.moveCursor(-self.cursor_x, -(1 if sequence == "" else int(sequence)))
+        elif function == "G":
+            self.moveCursor((1 if sequence == "" else int(sequence))-self.cursor_x, 0)
+        elif function == "H" or function == "f":
+            parts = re.findall(r'(\d*);?', sequence)
+            parts = [1 if part == "" else int(part) for part in parts]
+            self.moveCursor(parts[0]-1, parts[1]-1)
         else:
             verbose("Unknown CSI sequence: {}".format(function))
 
