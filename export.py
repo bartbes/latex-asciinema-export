@@ -168,10 +168,10 @@ class DisplayBuffer:
             elif parts[i] >= 30 and parts[i] <= 37:
                 self.color = parts[i]-30
             elif parts[i] == 38:
-                if len(parts) >= i+1 and parts[i+1] == 5:
+                if len(parts) > i+1 and parts[i+1] == 5:
                     self.color = parts[i+1]
                     i += 1
-                elif len(parts) >= i+3:
+                elif len(parts) > i+3:
                     self.color = (parts[i+1], parts[i+2], parts[i+3])
                     i += 3
                 else:
