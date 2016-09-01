@@ -241,7 +241,7 @@ class DisplayBuffer:
                 renderer.writeCharacter(cell.c)
             renderer.writeNewline()
 
-def main(asciicast, height, timestamp):
+def main(asciicast, height, timestamp, renderer):
     contents = json.loads(asciicast)
 
     # TODO: Use height?
@@ -260,18 +260,24 @@ def main(asciicast, height, timestamp):
 
         buffer.write(output)
 
-    buffer.render(LatexRenderer)
+    buffer.render(renderer)
 
     verbose("Exported screen contents at time: {}".format(curTime))
 
 if __name__ == "__main__":
     import argparse
 
+    renderers = {
+        'term': TerminalRenderer,
+        'latex': LatexRenderer,
+    }
+
     parser = argparse.ArgumentParser()
     parser.add_argument("asciicast", nargs=1, help="An existing asciicast")
     parser.add_argument("-n", "--height", help="The number of lines to output (default: screen height)", type=int)
     parser.add_argument("-t", "--timestamp", help="The position to export the screen contents at (default: end)", type=float)
     parser.add_argument("-v", "--verbose", help="Verbose output", action="count", default=0)
+    parser.add_argument("-r", "--renderer", help="Output renderer (default: latex)", choices=renderers, default="latex")
     args = parser.parse_args()
 
     if args.verbose > 0:
@@ -280,4 +286,4 @@ if __name__ == "__main__":
     with open(args.asciicast[0], "r") as f:
         asciicast = f.read()
 
-    main(asciicast = asciicast, height=args.height, timestamp=args.timestamp)
+    main(asciicast = asciicast, height=args.height, timestamp=args.timestamp, renderer = renderers[args.renderer])
