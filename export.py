@@ -116,6 +116,8 @@ class DisplayBuffer:
 
         if function == "m":
             return self.writeSgr(sequence)
+        elif function == "J" or function == "K":
+            self.erase(function, sequence)
         else:
             verbose("Unknown CSI sequence: {}".format(function))
 
@@ -193,6 +195,35 @@ class DisplayBuffer:
             for cell in row:
                 cell.clear()
             self.contents.append(row)
+
+    def erase(self, function, sequence):
+        if sequence == "0" or sequence == "":
+            startx = self.cursor_x
+            endx = self.width
+            starty = self.cursor_y+1
+            endy = self.height
+        elif sequence == "1":
+            startx = 0
+            endx = self.cursor_x
+            starty = 0
+            endy = self.cursor_y-1
+        elif sequence == "2":
+            startx = 0
+            endx = self.width
+            starty = 0
+            endy = self.height
+
+        for x in range(startx, endx):
+            self[x, self.cursor_y] = ' '
+
+        if function == "K": # erase line
+            return
+        # otherwise erase screen
+
+        for y in range(starty, endy):
+            for x in range(self.width):
+                self[x, y] = ' '
+
 
     def render(self, renderer):
         prevcolor = None
