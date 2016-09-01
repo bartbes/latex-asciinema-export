@@ -184,17 +184,18 @@ class DisplayBuffer:
 
     def moveCursor(self, dx, dy):
         self.cursor_x += dx
-        if self.cursor_x > self.width:
+        if self.cursor_x >= self.width:
             self.cursor_x = 0
             dy += 1
         if self.cursor_x < 0:
             self.cursor_x = 0
         self.cursor_y += dy
-        if self.cursor_y > self.height:
+        while self.cursor_y >= self.height:
             row = self.contents.pop(0)
-            for cell in row:
-                cell.clear()
             self.contents.append(row)
+            for x in range(self.width):
+                self[x, self.height-1] = ' '
+            self.cursor_y -= 1
 
     def erase(self, function, sequence):
         if sequence == "0" or sequence == "":
