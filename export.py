@@ -228,7 +228,7 @@ class DisplayBuffer:
             endx = self.cursor_x
             starty = 0
             endy = self.cursor_y-1
-        elif sequence == "2":
+        else: #elif sequence == "2":
             startx = 0
             endx = self.width
             starty = 0
