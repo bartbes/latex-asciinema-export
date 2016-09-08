@@ -26,6 +26,10 @@ class TerminalRenderer:
         print()
 
 class LatexRenderer:
+    escapeWithBackslash = set(["$", "#"])
+    escapeWithBraces = set(["[", "]", " "])
+    escapeSpecial = {"\\": "\\textbackslash", "_": "\char`_"}
+
     def setAnsiColor(c):
         print("\\ansicolor{{{}}}".format(c), end="")
 
@@ -37,10 +41,12 @@ class LatexRenderer:
 
     def writeCharacter(c):
         # TODO: escaping
-        if c == "$":
-            c = "\$"
-        elif c == "[" or c == "]":
+        if c in LatexRenderer.escapeWithBackslash:
+            c = "\\" + c
+        elif c in LatexRenderer.escapeWithBraces:
             c = "{" + c + "}"
+        elif c in LatexRenderer.escapeSpecial:
+            c = LatexRenderer.escapeSpecial[c]
         print(c, end="")
 
     def writeNewline():
